@@ -1,4 +1,5 @@
 import numpy as np
+import random
 from state import State
 
 
@@ -7,18 +8,23 @@ class Puzzle:
         self.x = x
         self.y = y
 
+    def selectRandom(self, availableNumbers: list) -> int:
+        if not availableNumbers:
+            return None
+        element = random.choice(availableNumbers)
+        availableNumbers.remove(element)
+        return element
+
     def generateInitialState(self) -> np.ndarray:
-        availableNumbers = np.arange(1, self.x * self.y)
+        rng = np.random.default_rng()
+        availableNumbers = list(range(1, self.x * self.y))
         array = np.array(
             [
-                [
-                    State(np.random.choice(availableNumbers), (i, j))
-                    for i in range(self.x)
-                ]
+                [self.selectRandom(availableNumbers) for i in range(self.x)]
                 for j in range(self.y)
             ]
         )
-        array
+        return array
 
     def generateGoalState(self) -> np.ndarray:
         print("")
@@ -26,4 +32,4 @@ class Puzzle:
 
 if __name__ == "__main__":
     puzzle = Puzzle()
-    print(puzzle.generateInitialState().shape)
+    print(puzzle.generateInitialState())
